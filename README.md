@@ -1,12 +1,44 @@
-# Coderr Backend
+# Coderr — marketplace API
 
-REST API for the Coderr freelancer marketplace, built with Django and Django REST Framework.
+<p>
+  <a href="https://coderr.marcelhaessler.de/"><b>Live demo</b></a> ·
+  <a href="https://marcelhaessler.de/coderr_portfolio.html">Case study</a> ·
+  <a href="https://github.com/MarcelHaessler">More projects</a> ·
+  <a href="#deutsch">Deutsch</a>
+</p>
 
-Business users publish offers with three pricing tiers (basic, standard, premium). Customer users
-book a tier, which creates an order, and can rate the business users they worked with.
+> REST API for a freelancer marketplace. Business users publish offers in exactly three price tiers, customers book one tier and rate the provider afterwards. The frontend was given; **the whole backend is mine**: data model, endpoints, roles and permissions.
 
-This repository contains the backend only. The frontend is a separate Vanilla JS project provided
-by the Developer Akademie.
+| | |
+| :-- | :-- |
+| **Stack** | Python · Django · Django REST Framework · token auth · django-filter |
+| **Scope** | 6 apps, 15 endpoints, filtering, ordering, pagination, uploads |
+| **Quality** | Tests for every app (happy path *and* permission/validation rules), flake8 + isort |
+| **Context** | Backend project of the Developer Akademie full-stack program |
+
+## Decisions worth a look
+
+- **Orders are snapshots.** Booking copies title, price, revisions, delivery time and features into the order. Editing or deleting the offer later never rewrites what a customer agreed to.
+- **Exactly three tiers, enforced.** An offer is only valid with one `basic`, one `standard` and one `premium` detail. Updates match details by `offer_type`, not by position.
+- **One review per customer and provider**, enforced twice: in the serializer for a readable error, and as a database constraint so it also holds outside the API.
+- **No duplicated user data.** Name and e-mail live on Django's user model and are read and written through the profile serializer instead of being copied into the profile.
+- **Roles decide what you can write.** Only business users create offers, only customers create orders and reviews, only staff delete orders.
+
+<a id="deutsch"></a>
+
+<details>
+<summary><b>Kurzfassung auf Deutsch</b></summary>
+
+REST-API für einen Dienstleistungs-Marktplatz. Anbieter stellen Angebote in genau drei Preisstufen ein, Kunden buchen eine Stufe und bewerten danach. Das Frontend war vorgegeben, **das komplette Backend ist von mir**: Datenmodell, Endpunkte, Rollen und Rechte.
+
+- **Bestellungen sind Kopien.** Die gebuchte Stufe wird in die Bestellung kopiert. Spätere Änderungen am Angebot schreiben alte Bestellungen nicht um.
+- **Genau drei Stufen**, serverseitig erzwungen.
+- **Eine Bewertung pro Kunde und Anbieter**, im Serializer *und* als Datenbank-Constraint.
+- **Rollen bestimmen Schreibrechte**, jede App hat Tests für Happy Path sowie Rechte- und Validierungsregeln.
+
+</details>
+
+---
 
 ## Requirements
 
